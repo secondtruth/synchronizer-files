@@ -1,0 +1,28 @@
+{
+    "name": "flamecore/synchronizer-files",
+    "description": "Synchronize local and remote filesystems",
+    "homepage": "http://www.flamecore.org",
+    "keywords": ["synchronization", "filesystems"],
+    "license": "ISC",
+    "authors": [
+        {
+            "name": "Christian Neff",
+            "email": "christian.neff@gmail.com",
+            "homepage": "http://www.secondtruth.de",
+            "role": "Developer"
+        }
+    ],
+    "support": {
+        "issues": "https://github.com/FlameCore/FilesSynchronizer/issues",
+        "source": "https://github.com/FlameCore/FilesSynchronizer"
+    },
+    "require": {
+        "php": ">=5.4",
+        "flamecore/synchronizer": "dev-master"
+    },
+    "autoload": {
+        "psr-4": {
+            "FlameCore\\Synchronizer\\Files\\": "lib/"
+        }
+    }
+}
