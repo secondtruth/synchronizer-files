@@ -39,6 +39,14 @@ class FilesSynchronizer extends AbstractSynchronizer
      */
     public function synchronize($preserve = true)
     {
+        if ($this->source === null) {
+            throw new \LogicException('Cannot synchronize without source.')
+        }
+
+        if ($this->target === null) {
+            throw new \LogicException('Cannot synchronize without target.')
+        }
+
         $diff = new FilesComparer($this->source, $this->target, $this->excludes);
 
         $this->updateOutdated($diff);
