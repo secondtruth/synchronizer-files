@@ -26,6 +26,8 @@ namespace FlameCore\Synchronizer\Files;
 use FlameCore\Synchronizer\AbstractSynchronizer;
 use FlameCore\Synchronizer\SynchronizerSourceInterface;
 use FlameCore\Synchronizer\SynchronizerTargetInterface;
+use FlameCore\Synchronizer\Files\Source\FilesSourceInterface;
+use FlameCore\Synchronizer\Files\Target\FilesTargetInterface;
 
 /**
  * The FilesSynchronizer class
@@ -40,11 +42,11 @@ class FilesSynchronizer extends AbstractSynchronizer
     public function synchronize($preserve = true)
     {
         if ($this->source === null) {
-            throw new \LogicException('Cannot synchronize without source.')
+            throw new \LogicException('Cannot synchronize without source.');
         }
 
         if ($this->target === null) {
-            throw new \LogicException('Cannot synchronize without target.')
+            throw new \LogicException('Cannot synchronize without target.');
         }
 
         $diff = new FilesComparer($this->source, $this->target, $this->excludes);
