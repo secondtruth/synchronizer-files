@@ -23,9 +23,6 @@
 
 namespace FlameCore\Synchronizer\Files\Source;
 
-use FlameCore\Synchronizer\Files\Target\FilesTargetInterface;
-use FlameCore\Observer\ObserverInterface;
-
 /**
  * The LocalFilesSource class
  *
@@ -51,7 +48,7 @@ class LocalFilesSource extends AbstractFilesSource
         $iterator = new \RecursiveDirectoryIterator($this->path, \FilesystemIterator::SKIP_DOTS | \FilesystemIterator::UNIX_PATHS);
 
         if ((is_string($exclude) || is_array($exclude)) && !empty($exclude)) {
-            $iterator = new \RecursiveCallbackFilterIterator($iterator, function ($current, $key, $iterator) use ($exclude) {
+            $iterator = new \RecursiveCallbackFilterIterator($iterator, function ($current) use ($exclude) {
                 if ($current->isDir()) {
                     return true;
                 }

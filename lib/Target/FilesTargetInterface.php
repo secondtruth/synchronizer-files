@@ -23,7 +23,6 @@
 
 namespace FlameCore\Synchronizer\Files\Target;
 
-use FlameCore\Synchronizer\Files\Source\FilesSourceInterface;
 use FlameCore\Synchronizer\SynchronizerTargetInterface;
 
 /**
