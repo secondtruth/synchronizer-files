@@ -67,10 +67,11 @@ class LocalFilesSource extends AbstractFilesSource
 
         $iterator = new \RecursiveIteratorIterator($iterator);
         foreach ($iterator as $file) {
-            $dirname = $file->getPath();
+            $pathname = substr($file->getPathName(), strlen($this->path));
             $filename = $file->getBasename();
+            $dirname = dirname($pathname);
 
-            $fileslist[$dirname][$filename] = $this->checksum($dir.'/'.$file);
+            $fileslist[$dirname][$filename] = substr($pathname, 1);
         }
 
         return $fileslist;
@@ -81,7 +82,7 @@ class LocalFilesSource extends AbstractFilesSource
      */
     public function getRealPathName($file)
     {
-        return realpath($this->path . DIRECTORY_SEPARATOR . $file);
+        return $this->path . DIRECTORY_SEPARATOR . str_replace('/', DIRECTORY_SEPARATOR, $file);
     }
 
     /**
@@ -91,7 +92,7 @@ class LocalFilesSource extends AbstractFilesSource
     {
         $fileperms = fileperms($this->getRealPathName($file));
 
-        return (int) substr(decoct($fileperms), 2);
+        return substr(decoct($fileperms), 2);
     }
 
     /**
