@@ -68,8 +68,11 @@ class FilesComparer
         $sourceFiles = $source->getFilesList($exclude);
         $targetFiles = $target->getFilesList();
 
+        ksort($sourceFiles);
+        ksort($targetFiles);
+
         foreach ($sourceFiles as $dir => $files) {
-            if (isset($targetFiles[$dir])) {
+            if (!isset($targetFiles[$dir])) {
                 $this->missingDirs[] = $dir;
             }
 
