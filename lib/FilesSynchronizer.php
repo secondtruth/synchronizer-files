@@ -83,7 +83,7 @@ class FilesSynchronizer extends AbstractSynchronizer
         $files = $diff->getOutdatedFiles();
 
         foreach ($files as $file) {
-            $this->target->put($file, $this->source->get($file), $this->source->getFileMode($file));
+            $this->target->put($file, $this->source->get($file), 0777);
         }
     }
 
@@ -96,11 +96,11 @@ class FilesSynchronizer extends AbstractSynchronizer
         $directories = $diff->getMissingDirs();
 
         foreach ($directories as $directory) {
-            $this->target->createDir($directory, $this->source->getFileMode($directory));
+            $this->target->createDir($directory);
         }
 
         foreach ($files as $file) {
-            $this->target->put($file, $this->source->get($file), $this->source->getFileMode($file));
+            $this->target->put($file, $this->source->get($file), 0777);
         }
     }
 
