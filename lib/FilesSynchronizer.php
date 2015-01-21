@@ -37,6 +37,11 @@ use FlameCore\Synchronizer\Files\Target\FilesTargetInterface;
 class FilesSynchronizer extends AbstractSynchronizer
 {
     /**
+     * @var int
+     */
+    protected $fails = 0;
+
+    /**
      * {@inheritdoc}
      */
     public function synchronize($preserve = true)
@@ -57,6 +62,8 @@ class FilesSynchronizer extends AbstractSynchronizer
         if (!$preserve) {
             $this->removeObsolete($diff);
         }
+
+        return $this->fails == 0;
     }
 
     /**
@@ -83,7 +90,9 @@ class FilesSynchronizer extends AbstractSynchronizer
         $files = $diff->getOutdatedFiles();
 
         foreach ($files as $file) {
-            $this->target->put($file, $this->source->get($file), 0777);
+            if (!$this->target->put($file, $this->source->get($file), 0777)) {
+                $this->fails++;
+            }
         }
     }
 
@@ -96,11 +105,15 @@ class FilesSynchronizer extends AbstractSynchronizer
         $directories = $diff->getMissingDirs();
 
         foreach ($directories as $directory) {
-            $this->target->createDir($directory);
+            if (!$this->target->createDir($directory)) {
+                $this->fails++;
+            }
         }
 
         foreach ($files as $file) {
-            $this->target->put($file, $this->source->get($file), 0777);
+            if (!$this->target->put($file, $this->source->get($file), 0777)) {
+                $this->fails++;
+            }
         }
     }
 
@@ -113,11 +126,15 @@ class FilesSynchronizer extends AbstractSynchronizer
         $directories = $diff->getObsoleteDirs();
 
         foreach ($files as $file) {
-            $this->target->remove($file);
+            if (!$this->target->remove($file)) {
+                $this->fails++;
+            }
         }
 
         foreach ($directories as $directory) {
-            $this->target->removeDir($directory);
+            if (!$this->target->removeDir($directory)) {
+                $this->fails++;
+            }
         }
     }
 }
