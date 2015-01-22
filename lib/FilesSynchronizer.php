@@ -54,6 +54,10 @@ class FilesSynchronizer extends AbstractSynchronizer
             throw new \LogicException('Cannot synchronize without target.');
         }
 
+        if ($this->observer) {
+            $this->observer->notify('sync.start');
+        }
+
         $diff = new FilesComparer($this->source, $this->target, $this->excludes);
 
         $this->updateOutdated($diff);
@@ -61,6 +65,10 @@ class FilesSynchronizer extends AbstractSynchronizer
 
         if (!$preserve) {
             $this->removeObsolete($diff);
+        }
+
+        if ($this->observer) {
+            $this->observer->notify('sync.finish', ['fails' => $this->fails]);
         }
 
         return $this->fails == 0;
@@ -89,10 +97,22 @@ class FilesSynchronizer extends AbstractSynchronizer
     {
         $files = $diff->getOutdatedFiles();
 
+        if ($this->observer) {
+            $this->observer->notify('sync.task.start', ['task' => 'Updating outdated files', 'total' => count($files)]);
+        }
+
         foreach ($files as $file) {
             if (!$this->target->put($file, $this->source->get($file), 0777)) {
                 $this->fails++;
             }
+
+            if ($this->observer) {
+                $this->observer->notify('sync.task.status');
+            }
+        }
+
+        if ($this->observer) {
+            $this->observer->notify('sync.task.finish');
         }
     }
 
@@ -104,6 +124,10 @@ class FilesSynchronizer extends AbstractSynchronizer
         $files = $diff->getMissingFiles();
         $directories = $diff->getMissingDirs();
 
+        if ($this->observer) {
+            $this->observer->notify('sync.task.start', ['task' => 'Adding missing files', 'total' => count($files)]);
+        }
+
         foreach ($directories as $directory) {
             if (!$this->target->createDir($directory)) {
                 $this->fails++;
@@ -114,6 +138,14 @@ class FilesSynchronizer extends AbstractSynchronizer
             if (!$this->target->put($file, $this->source->get($file), 0777)) {
                 $this->fails++;
             }
+
+            if ($this->observer) {
+                $this->observer->notify('sync.task.status');
+            }
+        }
+
+        if ($this->observer) {
+            $this->observer->notify('sync.task.finish');
         }
     }
 
@@ -125,9 +157,17 @@ class FilesSynchronizer extends AbstractSynchronizer
         $files = $diff->getObsoleteFiles();
         $directories = $diff->getObsoleteDirs();
 
+        if ($this->observer) {
+            $this->observer->notify('sync.task.start', ['task' => 'Removing obsolete files', 'total' => count($files)]);
+        }
+
         foreach ($files as $file) {
             if (!$this->target->remove($file)) {
                 $this->fails++;
+            }
+
+            if ($this->observer) {
+                $this->observer->notify('sync.task.status');
             }
         }
 
@@ -135,6 +175,10 @@ class FilesSynchronizer extends AbstractSynchronizer
             if (!$this->target->removeDir($directory)) {
                 $this->fails++;
             }
+        }
+
+        if ($this->observer) {
+            $this->observer->notify('sync.task.finish');
         }
     }
 }
