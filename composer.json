@@ -24,5 +24,10 @@
         "psr-4": {
             "FlameCore\\Synchronizer\\Files\\": "lib/"
         }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "FlameCore\\Synchronizer\\Files\\Tests\\": "tests/"
+        }
     }
 }
