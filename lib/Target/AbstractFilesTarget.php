@@ -63,6 +63,6 @@ abstract class AbstractFilesTarget implements FilesTargetInterface
      */
     protected function isAbsolutePath($path)
     {
-        return $path[0] === DIRECTORY_SEPARATOR || preg_match('#^(?:/|\\\\|[A-Za-z]:\\\\|[A-Za-z]:/)#',$path);
+        return $path[0] === DIRECTORY_SEPARATOR || preg_match('#^(?:/|\\\\|[A-Za-z]:\\\\|[A-Za-z]:/)#', $path);
     }
 }

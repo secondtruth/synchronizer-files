@@ -100,7 +100,9 @@ class LocalFilesSource extends AbstractFilesSource
      */
     public function getFileHash($file)
     {
-        return hash_file('crc32b', $this->getRealPathName($file));
+        $filename = $this->getRealPathName($file);
+
+        return is_readable($filename) ? hash_file('crc32b', $filename) : false;
     }
 
     /**

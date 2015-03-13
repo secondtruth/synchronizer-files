@@ -74,7 +74,7 @@ class LocalFilesTarget extends AbstractFilesTarget
      */
     public function createDir($name, $mode = 0777)
     {
-        return mkdir($this->getRealPathName($name), $mode, true);
+        return @mkdir($this->getRealPathName($name), $mode, true);
     }
 
     /**
@@ -147,7 +147,9 @@ class LocalFilesTarget extends AbstractFilesTarget
      */
     public function getFileHash($file)
     {
-        return hash_file('crc32b', $this->getRealPathName($file));
+        $filename = $this->getRealPathName($file);
+
+        return is_readable($filename) ? hash_file('crc32b', $filename) : false;
     }
 
     /**
