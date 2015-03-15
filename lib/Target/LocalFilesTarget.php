@@ -23,6 +23,8 @@
 
 namespace FlameCore\Synchronizer\Files\Target;
 
+use Symfony\Component\Filesystem\Filesystem;
+
 /**
  * The LocalFilesTarget class
  *
@@ -30,6 +32,22 @@ namespace FlameCore\Synchronizer\Files\Target;
  */
 class LocalFilesTarget extends AbstractFilesTarget
 {
+    /**
+     * @var \Symfony\Component\Filesystem\Filesystem
+     */
+    protected $fs;
+
+    /**
+     * @param array $settings
+     * @param \Symfony\Component\Filesystem\Filesystem $filesystem
+     */
+    public function __construct(array $settings, Filesystem $filesystem = null)
+    {
+        parent::__construct($settings);
+
+        $this->fs = $filesystem ?: new Filesystem();
+    }
+
     /**
      * {@inheritdoc}
      */
@@ -45,12 +63,7 @@ class LocalFilesTarget extends AbstractFilesTarget
     {
         $filename = $this->getRealPathName($file);
 
-        if (file_put_contents($filename, $content)) {
-            @chmod($filename, $mode);
-            return true;
-        }
-
-        return false;
+        return $this->fs->dumpFile($filename, $content, $mode);
     }
 
     /**
@@ -58,7 +71,7 @@ class LocalFilesTarget extends AbstractFilesTarget
      */
     public function chmod($file, $mode)
     {
-        return chmod($this->getRealPathName($file), $mode);
+        return $this->fs->chmod($this->getRealPathName($file), $mode);
     }
 
     /**
@@ -66,7 +79,7 @@ class LocalFilesTarget extends AbstractFilesTarget
      */
     public function remove($file)
     {
-        return unlink($this->getRealPathName($file));
+        return $this->fs->remove($this->getRealPathName($file));
     }
 
     /**
@@ -74,7 +87,7 @@ class LocalFilesTarget extends AbstractFilesTarget
      */
     public function createDir($name, $mode = 0777)
     {
-        return @mkdir($this->getRealPathName($name), $mode, true);
+        return $this->fs->mkdir($this->getRealPathName($name), $mode, true);
     }
 
     /**
@@ -82,7 +95,7 @@ class LocalFilesTarget extends AbstractFilesTarget
      */
     public function removeDir($name)
     {
-        return rmdir($this->getRealPathName($name));
+        return $this->fs->remove($this->getRealPathName($name));
     }
 
     /**

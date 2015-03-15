@@ -18,7 +18,8 @@
     },
     "require": {
         "php": ">=5.4",
-        "flamecore/synchronizer": "dev-master"
+        "flamecore/synchronizer": "dev-master",
+        "symfony/filesystem": "~2.6"
     },
     "autoload": {
         "psr-4": {
