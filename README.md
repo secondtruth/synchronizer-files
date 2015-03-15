@@ -13,6 +13,8 @@ Requirements
 Contributors
 ------------
 
+If you want to contribute, please see the [CONTRIBUTING](CONTRIBUTING.md) file first.
+
 Thanks to the contributors:
 
 * Christian Neff (secondtruth)

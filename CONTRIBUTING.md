@@ -11,15 +11,13 @@ Contributing Guidelines
 Coding Standard
 ---------------
 
-* We use the [PSR-2 coding style][1] but without the line length limit.
+We use the [PSR-2 coding style][1] but without the line length limit.
 
 
 Running tests
 -------------
 
-1. Copy the file `phpunit.xml.dist` to `phpunit.xml`
-
-2. Then run the following commands:
+First copy the file `phpunit.xml.dist` to `phpunit.xml`, then run the following commands:
 
     $ cd path/to/FilesSynchronizer/
     $ composer install
