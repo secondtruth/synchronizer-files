@@ -1,6 +1,9 @@
 FlameCore FilesSynchronizer
 ===========================
 
+[![Code Climate](http://img.shields.io/codeclimate/github/FlameCore/FilesSynchronizer.svg)](https://codeclimate.com/github/FlameCore/FilesSynchronizer)
+[![License](http://img.shields.io/packagist/l/flamecore/synchronizer-files.svg)](https://packagist.org/packages/flamecore/synchronizer-files)
+
 This library makes it easy to synchronize local and remote filesystems.
 
 
