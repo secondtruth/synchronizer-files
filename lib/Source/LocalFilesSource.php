@@ -23,12 +23,14 @@
 
 namespace FlameCore\Synchronizer\Files\Source;
 
+use FlameCore\Synchronizer\Files\Location\LocalFilesLocation;
+
 /**
  * The LocalFilesSource class
  *
  * @author   Christian Neff <christian.neff@gmail.com>
  */
-class LocalFilesSource extends AbstractFilesSource
+class LocalFilesSource extends LocalFilesLocation implements FilesSourceInterface
 {
     /**
      * {@inheritdoc}
@@ -103,17 +105,5 @@ class LocalFilesSource extends AbstractFilesSource
         $filename = $this->getRealPathName($file);
 
         return is_readable($filename) ? hash_file('crc32b', $filename) : false;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    protected function discoverSource(array $settings)
-    {
-        if (!isset($settings['dir']) || !is_string($settings['dir'])) {
-            throw new \InvalidArgumentException(sprintf('The %s does not define "dir" setting.', get_class($this)));
-        }
-
-        return !$this->isAbsolutePath($settings['dir']) ? realpath(getcwd() . DIRECTORY_SEPARATOR . $settings['dir']) : $settings['dir'];
     }
 }

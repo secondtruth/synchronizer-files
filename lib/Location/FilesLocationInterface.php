@@ -21,48 +21,17 @@
  * @license  ISC License <http://opensource.org/licenses/ISC>
  */
 
-namespace FlameCore\Synchronizer\Files\Source;
+namespace FlameCore\Synchronizer\Files\Location;
 
 /**
- * The AbstractFilesSource class
+ * The FilesLocation interface
  *
  * @author   Christian Neff <christian.neff@gmail.com>
  */
-abstract class AbstractFilesSource implements FilesSourceInterface
+interface FilesLocationInterface
 {
     /**
-     * @var string
-     */
-    protected $path;
-
-    /**
      * {@inheritdoc}
      */
-    public function __construct(array $settings)
-    {
-        $this->path = $this->discoverSource($settings);
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getFilesPath()
-    {
-        return $this->path;
-    }
-
-    /**
-     * @param array $settings
-     * @return string
-     */
-    abstract protected function discoverSource(array $settings);
-
-    /**
-     * @param string $path
-     * @return bool
-     */
-    protected function isAbsolutePath($path)
-    {
-        return $path[0] === DIRECTORY_SEPARATOR || preg_match('#^(?:/|\\\\|[A-Za-z]:\\\\|[A-Za-z]:/)#', $path);
-    }
+    public function __construct(array $settings);
 }

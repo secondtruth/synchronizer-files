@@ -23,6 +23,7 @@
 
 namespace FlameCore\Synchronizer\Files\Target;
 
+use FlameCore\Synchronizer\Files\Location\LocalFilesLocation;
 use Symfony\Component\Filesystem\Filesystem;
 
 /**
@@ -30,7 +31,7 @@ use Symfony\Component\Filesystem\Filesystem;
  *
  * @author   Christian Neff <christian.neff@gmail.com>
  */
-class LocalFilesTarget extends AbstractFilesTarget
+class LocalFilesTarget extends LocalFilesLocation implements FilesTargetInterface
 {
     /**
      * @var \Symfony\Component\Filesystem\Filesystem
@@ -105,7 +106,8 @@ class LocalFilesTarget extends AbstractFilesTarget
     {
         $fileslist = array();
 
-        $iterator = new \RecursiveDirectoryIterator($this->path, \FilesystemIterator::SKIP_DOTS | \FilesystemIterator::UNIX_PATHS);
+        $iterator = new \RecursiveDirectoryIterator($this->path,
+            \FilesystemIterator::SKIP_DOTS | \FilesystemIterator::UNIX_PATHS);
 
         if ((is_string($exclude) || is_array($exclude)) && !empty($exclude)) {
             $iterator = new \RecursiveCallbackFilterIterator($iterator, function ($current) use ($exclude) {
@@ -163,17 +165,5 @@ class LocalFilesTarget extends AbstractFilesTarget
         $filename = $this->getRealPathName($file);
 
         return is_readable($filename) ? hash_file('crc32b', $filename) : false;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    protected function discoverTarget(array $settings)
-    {
-        if (!isset($settings['dir']) || !is_string($settings['dir'])) {
-            throw new \InvalidArgumentException(sprintf('The %s does not define "dir" setting.', get_class($this)));
-        }
-
-        return !$this->isAbsolutePath($settings['dir']) ? realpath(getcwd() . DIRECTORY_SEPARATOR . $settings['dir']) : $settings['dir'];
     }
 }
