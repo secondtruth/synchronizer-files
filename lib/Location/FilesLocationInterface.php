@@ -34,4 +34,16 @@ interface FilesLocationInterface
      * {@inheritdoc}
      */
     public function __construct(array $settings);
+
+    /**
+     * @param array|bool $exclude
+     * @return array
+     */
+    public function getFilesList($exclude = false);
+
+    /**
+     * @param string $file
+     * @return string
+     */
+    public function getRealPathName($file);
 }

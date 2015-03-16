@@ -56,6 +56,53 @@ class LocalFilesLocation implements FilesLocationInterface
     }
 
     /**
+     * {@inheritdoc}
+     */
+    public function getFilesList($exclude = false)
+    {
+        $fileslist = array();
+
+        $iterator = new \RecursiveDirectoryIterator($this->path, \FilesystemIterator::SKIP_DOTS | \FilesystemIterator::UNIX_PATHS);
+
+        if ((is_string($exclude) || is_array($exclude)) && !empty($exclude)) {
+            $iterator = new \RecursiveCallbackFilterIterator($iterator, function ($current) use ($exclude) {
+                if ($current->isDir()) {
+                    return true;
+                }
+
+                $subpath = substr($current->getPathName(), strlen($this->path) + 1);
+
+                foreach ((array) $exclude as $pattern) {
+                    if ($pattern[0] == '!' ? !fnmatch(substr($pattern, 1), $subpath) : fnmatch($pattern, $subpath)) {
+                        return false;
+                    }
+                }
+
+                return true;
+            });
+        }
+
+        $iterator = new \RecursiveIteratorIterator($iterator);
+        foreach ($iterator as $file) {
+            $pathname = substr($file->getPathName(), strlen($this->path));
+            $filename = $file->getBasename();
+            $dirname = dirname($pathname);
+
+            $fileslist[$dirname][$filename] = substr($pathname, 1);
+        }
+
+        return $fileslist;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getRealPathName($file)
+    {
+        return $this->path . DIRECTORY_SEPARATOR . str_replace('/', DIRECTORY_SEPARATOR, $file);
+    }
+
+    /**
      * @param string $path
      * @return bool
      */

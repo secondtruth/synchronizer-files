@@ -23,6 +23,7 @@
 
 namespace FlameCore\Synchronizer\Files\Source;
 
+use FlameCore\Synchronizer\Files\Location\FilesLocationInterface;
 use FlameCore\Synchronizer\SynchronizerSourceInterface;
 
 /**
@@ -30,30 +31,13 @@ use FlameCore\Synchronizer\SynchronizerSourceInterface;
  *
  * @author   Christian Neff <christian.neff@gmail.com>
  */
-interface FilesSourceInterface extends SynchronizerSourceInterface
+interface FilesSourceInterface extends SynchronizerSourceInterface, FilesLocationInterface
 {
     /**
      * @param string $file
      * @return string
      */
     public function get($file);
-
-    /**
-     * @return string
-     */
-    public function getFilesPath();
-
-    /**
-     * @param array|bool $exclude
-     * @return array
-     */
-    public function getFilesList($exclude = false);
-
-    /**
-     * @param string $file
-     * @return string
-     */
-    public function getRealPathName($file);
 
     /**
      * @param string $file
