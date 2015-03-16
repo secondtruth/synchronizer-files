@@ -32,12 +32,12 @@ use FlameCore\Synchronizer\SynchronizerFactoryInterface;
  */
 class FilesSynchronizerFactory implements SynchronizerFactoryInterface
 {
-    protected static $sources = [
-        'local' => 'LocalFilesSource'
+    protected $sources = [
+        'local' => 'FlameCore\Synchronizer\Files\Source\LocalFilesSource'
     ];
     
-    protected static $targets = [
-        'local' => 'LocalFilesTarget'
+    protected $targets = [
+        'local' => 'FlameCore\Synchronizer\Files\Target\LocalFilesTarget'
     ];
     
     /**
@@ -48,11 +48,7 @@ class FilesSynchronizerFactory implements SynchronizerFactoryInterface
         $source = $this->createSource($sourceSettings);
         $target = $this->createTarget($targetSettings);
 
-        $object = new FilesSynchronizer();
-        $object->setSource($source);
-        $object->setTarget($target);
-
-        return $object;
+        return new FilesSynchronizer($source, $target);
     }
 
     /**
@@ -61,16 +57,16 @@ class FilesSynchronizerFactory implements SynchronizerFactoryInterface
     public function createSource(array $settings)
     {
         if (isset($settings['type'])) {
-            $type = (string) $settings['type'];
+            $type = $this->normalize($settings['type']);
             
-            if (!isset(self::$sources[$type])) {
-                throw new \DomainException(sprintf('The source type "%s" is invalid.', $type));
+            if (!isset($this->sources[$type])) {
+                throw new \DomainException(sprintf('The source type "%s" does not exist.', $type));
             }
         } else {
             $type = 'local';
         }
 
-        $class = sprintf('%s\Source\%s', __NAMESPACE__, self::$sources[$type]);
+        $class = $this->sources[$type];
 
         return new $class($settings);
     }
@@ -81,17 +77,67 @@ class FilesSynchronizerFactory implements SynchronizerFactoryInterface
     public function createTarget(array $settings)
     {
         if (isset($settings['type'])) {
-            $type = (string) $settings['type'];
+            $type = $this->normalize($settings['type']);
             
-            if (!isset(self::$targets[$type])) {
-                throw new \DomainException(sprintf('The target type "%s" is invalid.', $type));
+            if (!isset($this->targets[$type])) {
+                throw new \DomainException(sprintf('The target type "%s" does not exist.', $type));
             }
         } else {
             $type = 'local';
         }
 
-        $class = sprintf('%s\Target\%s', __NAMESPACE__, self::$targets[$type]);
+        $class = $this->targets[$type];
 
         return new $class($settings);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function registerSource($type, $class)
+    {
+        $type = $this->normalize($type);
+
+        if (isset($this->sources[$type])) {
+            throw new \LogicException(sprintf('The source type "%s" already exists.', $type));
+        }
+
+        if (!class_exists($class)) {
+            throw new \DomainException('The given class does not exist.');
+        }
+
+        $this->sources[$type] = $class;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function registerTarget($type, $class)
+    {
+        $type = $this->normalize($type);
+
+        if (isset($this->targets[$type])) {
+            throw new \LogicException(sprintf('The target type "%s" already exists.', $type));
+        }
+
+        if (!class_exists($class)) {
+            throw new \DomainException('The given class does not exist.');
+        }
+
+        $this->targets[$type] = $class;
+    }
+
+    /**
+     * @param string $name
+     * @return string
+     */
+    protected function normalize($name) {
+        $name = (string) $name;
+
+        if ($name === '') {
+            throw new \InvalidArgumentException('The type name must not be empty.');
+        }
+
+        return $name;
     }
 }
