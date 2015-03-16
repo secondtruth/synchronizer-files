@@ -64,7 +64,13 @@ class LocalFilesTarget extends LocalFilesLocation implements FilesTargetInterfac
     {
         $filename = $this->getRealPathName($file);
 
-        return $this->fs->dumpFile($filename, $content, $mode);
+        try {
+            $this->fs->dumpFile($filename, $content, $mode);
+
+            return true;
+        } catch (\Exception $e) {
+            return false;
+        }
     }
 
     /**
@@ -72,7 +78,13 @@ class LocalFilesTarget extends LocalFilesLocation implements FilesTargetInterfac
      */
     public function chmod($file, $mode)
     {
-        return $this->fs->chmod($this->getRealPathName($file), $mode);
+        try {
+            $this->fs->chmod($this->getRealPathName($file), $mode);
+
+            return true;
+        } catch (\Exception $e) {
+            return false;
+        }
     }
 
     /**
@@ -80,7 +92,13 @@ class LocalFilesTarget extends LocalFilesLocation implements FilesTargetInterfac
      */
     public function remove($file)
     {
-        return $this->fs->remove($this->getRealPathName($file));
+        try {
+            $this->fs->remove($this->getRealPathName($file));
+
+            return true;
+        } catch (\Exception $e) {
+            return false;
+        }
     }
 
     /**
@@ -88,7 +106,13 @@ class LocalFilesTarget extends LocalFilesLocation implements FilesTargetInterfac
      */
     public function createDir($name, $mode = 0777)
     {
-        return $this->fs->mkdir($this->getRealPathName($name), $mode, true);
+        try {
+            $this->fs->mkdir($this->getRealPathName($name), $mode, true);
+
+            return true;
+        } catch (\Exception $e) {
+            return false;
+        }
     }
 
     /**
@@ -96,7 +120,13 @@ class LocalFilesTarget extends LocalFilesLocation implements FilesTargetInterfac
      */
     public function removeDir($name)
     {
-        return $this->fs->remove($this->getRealPathName($name));
+        try {
+            $this->fs->remove($this->getRealPathName($name));
+
+            return true;
+        } catch (\Exception $e) {
+            return false;
+        }
     }
 
     /**
