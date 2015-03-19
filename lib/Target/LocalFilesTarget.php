@@ -36,7 +36,7 @@ class LocalFilesTarget extends LocalFilesLocation implements FilesTargetInterfac
     /**
      * @var \Symfony\Component\Filesystem\Filesystem
      */
-    protected $fs;
+    protected $filesystem;
 
     /**
      * @param array $settings
@@ -46,7 +46,7 @@ class LocalFilesTarget extends LocalFilesLocation implements FilesTargetInterfac
     {
         parent::__construct($settings);
 
-        $this->fs = $filesystem ?: new Filesystem();
+        $this->filesystem = $filesystem ?: new Filesystem();
     }
 
     /**
@@ -65,7 +65,7 @@ class LocalFilesTarget extends LocalFilesLocation implements FilesTargetInterfac
         $filename = $this->getRealPathName($file);
 
         try {
-            $this->fs->dumpFile($filename, $content, $mode);
+            $this->filesystem->dumpFile($filename, $content, $mode);
 
             return true;
         } catch (\Exception $e) {
@@ -79,7 +79,7 @@ class LocalFilesTarget extends LocalFilesLocation implements FilesTargetInterfac
     public function chmod($file, $mode)
     {
         try {
-            $this->fs->chmod($this->getRealPathName($file), $mode);
+            $this->filesystem->chmod($this->getRealPathName($file), $mode);
 
             return true;
         } catch (\Exception $e) {
@@ -93,7 +93,7 @@ class LocalFilesTarget extends LocalFilesLocation implements FilesTargetInterfac
     public function remove($file)
     {
         try {
-            $this->fs->remove($this->getRealPathName($file));
+            $this->filesystem->remove($this->getRealPathName($file));
 
             return true;
         } catch (\Exception $e) {
@@ -107,7 +107,7 @@ class LocalFilesTarget extends LocalFilesLocation implements FilesTargetInterfac
     public function createDir($name, $mode = 0777)
     {
         try {
-            $this->fs->mkdir($this->getRealPathName($name), $mode, true);
+            $this->filesystem->mkdir($this->getRealPathName($name), $mode, true);
 
             return true;
         } catch (\Exception $e) {
@@ -121,7 +121,7 @@ class LocalFilesTarget extends LocalFilesLocation implements FilesTargetInterfac
     public function removeDir($name)
     {
         try {
-            $this->fs->remove($this->getRealPathName($name));
+            $this->filesystem->remove($this->getRealPathName($name));
 
             return true;
         } catch (\Exception $e) {
