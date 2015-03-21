@@ -32,24 +32,54 @@ use FlameCore\Synchronizer\Files\Target\LocalFilesTarget;
  */
 class LocalFilesSynchronizerTest extends FilesSynchronizerTestCase
 {
-    public function testSynchronizerSucceeds()
+    /**
+     * @var string
+     */
+    private $sourcePath;
+
+    /**
+     * @var string
+     */
+    private $targetPath;
+
+    /**
+     * @var \FlameCore\Synchronizer\Files\FilesSynchronizer
+     */
+    private $synchronizer;
+
+    public function setUp()
     {
-        $sourcePath = $this->fillWorkspaceWithSource();
-        $targetPath = $this->fillWorkspaceWithTarget();
+        parent::setUp();
 
-        $source = new LocalFilesSource(['dir' => $sourcePath]);
-        $target = new LocalFilesTarget(['dir' => $targetPath]);
+        $this->sourcePath = $this->fillWorkspaceWithSource();
+        $this->targetPath = $this->fillWorkspaceWithTarget();
 
-        $synchronizer = new FilesSynchronizer($source, $target);
-        $synchronizer->synchronize();
+        $source = new LocalFilesSource(['dir' => $this->sourcePath]);
+        $target = new LocalFilesTarget(['dir' => $this->targetPath]);
 
-        $file1 = $targetPath.DIRECTORY_SEPARATOR.'new.txt';
-        $file2 = $targetPath.DIRECTORY_SEPARATOR.'modified.txt';
+        $this->synchronizer = new FilesSynchronizer($source, $target);
+    }
+
+    public function testSynchronizer()
+    {
+        $this->synchronizer->synchronize();
+
+        $file1 = $this->targetPath.DIRECTORY_SEPARATOR.'new.txt';
+        $file2 = $this->targetPath.DIRECTORY_SEPARATOR.'modified.txt';
 
         $this->assertFileExists($file1);
         $this->assertEquals('CONTENT', file_get_contents($file1));
 
         $this->assertFileExists($file2);
         $this->assertEquals('MODIFIED CONTENT', file_get_contents($file2));
+    }
+
+    public function testSynchronizerPreserveDisabled()
+    {
+        $this->synchronizer->synchronize(false);
+
+        $file = $this->targetPath.DIRECTORY_SEPARATOR.'obsolete.txt';
+
+        $this->assertFileNotExists($file);
     }
 }

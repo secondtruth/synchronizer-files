@@ -52,12 +52,12 @@ abstract class FilesSynchronizerTestCase extends \PHPUnit_Framework_TestCase
      */
     protected function fillWorkspaceWithSource($withFiles = true)
     {
-        $sourcePath = $this->workspace . DIRECTORY_SEPARATOR . 'source';
+        $sourcePath = $this->workspace.DIRECTORY_SEPARATOR.'source';
         mkdir($sourcePath);
 
         if ($withFiles) {
-            file_put_contents($sourcePath . DIRECTORY_SEPARATOR . 'new.txt', 'CONTENT');
-            file_put_contents($sourcePath . DIRECTORY_SEPARATOR . 'modified.txt', 'MODIFIED CONTENT');
+            file_put_contents($sourcePath.DIRECTORY_SEPARATOR.'new.txt', 'CONTENT');
+            file_put_contents($sourcePath.DIRECTORY_SEPARATOR.'modified.txt', 'MODIFIED CONTENT');
         }
 
         return $sourcePath;
@@ -73,7 +73,8 @@ abstract class FilesSynchronizerTestCase extends \PHPUnit_Framework_TestCase
         mkdir($targetPath);
 
         if ($withFiles) {
-            file_put_contents($targetPath . DIRECTORY_SEPARATOR . 'modified.txt', 'OLD CONTENT');
+            file_put_contents($targetPath.DIRECTORY_SEPARATOR.'modified.txt', 'OLD CONTENT');
+            file_put_contents($targetPath.DIRECTORY_SEPARATOR.'obsolete.txt', 'CONTENT');
         }
 
         return $targetPath;
