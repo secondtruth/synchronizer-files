@@ -31,7 +31,7 @@ namespace FlameCore\Synchronizer\Files\Location;
 interface FilesLocationInterface
 {
     /**
-     * {@inheritdoc}
+     * @param array $settings
      */
     public function __construct(array $settings);
 

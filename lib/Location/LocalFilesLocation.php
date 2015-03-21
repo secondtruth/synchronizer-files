@@ -24,7 +24,7 @@
 namespace FlameCore\Synchronizer\Files\Location;
 
 /**
- * The FilesLocation class
+ * The LocalFilesLocation class
  *
  * @author   Christian Neff <christian.neff@gmail.com>
  */
@@ -48,7 +48,7 @@ class LocalFilesLocation implements FilesLocationInterface
     }
 
     /**
-     * {@inheritdoc}
+     * @return string
      */
     public function getFilesPath()
     {
