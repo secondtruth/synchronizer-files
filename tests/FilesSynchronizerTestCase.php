@@ -56,19 +56,25 @@ abstract class FilesSynchronizerTestCase extends \PHPUnit_Framework_TestCase
         mkdir($sourcePath);
 
         if ($withFiles) {
-            file_put_contents($sourcePath . DIRECTORY_SEPARATOR . 'file.txt', 'TESTFILE');
+            file_put_contents($sourcePath . DIRECTORY_SEPARATOR . 'new.txt', 'CONTENT');
+            file_put_contents($sourcePath . DIRECTORY_SEPARATOR . 'modified.txt', 'MODIFIED CONTENT');
         }
 
         return $sourcePath;
     }
 
     /**
+     * @param bool $withFiles
      * @return string
      */
-    protected function fillWorkspaceWithTarget()
+    protected function fillWorkspaceWithTarget($withFiles = true)
     {
         $targetPath = $this->workspace.DIRECTORY_SEPARATOR.'target';
         mkdir($targetPath);
+
+        if ($withFiles) {
+            file_put_contents($targetPath . DIRECTORY_SEPARATOR . 'modified.txt', 'OLD CONTENT');
+        }
 
         return $targetPath;
     }

@@ -37,15 +37,19 @@ class LocalFilesSynchronizerTest extends FilesSynchronizerTestCase
         $sourcePath = $this->fillWorkspaceWithSource();
         $targetPath = $this->fillWorkspaceWithTarget();
 
-        $file = $targetPath.DIRECTORY_SEPARATOR.'file.txt';
-
         $source = new LocalFilesSource(['dir' => $sourcePath]);
         $target = new LocalFilesTarget(['dir' => $targetPath]);
 
         $synchronizer = new FilesSynchronizer($source, $target);
         $synchronizer->synchronize();
 
-        $this->assertFileExists($file);
-        $this->assertEquals('TESTFILE', file_get_contents($file));
+        $file1 = $targetPath.DIRECTORY_SEPARATOR.'new.txt';
+        $file2 = $targetPath.DIRECTORY_SEPARATOR.'modified.txt';
+
+        $this->assertFileExists($file1);
+        $this->assertEquals('CONTENT', file_get_contents($file1));
+
+        $this->assertFileExists($file2);
+        $this->assertEquals('MODIFIED CONTENT', file_get_contents($file2));
     }
 }
