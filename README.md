@@ -11,10 +11,29 @@ FilesSynchronizer was developed as backend for the deployment and testing tool [
 It is using our self-developed [Synchronizer](https://github.com/FlameCore/Synchronizer) library as foundation.
 
 
-Requirements
-------------
+Getting Started
+---------------
 
-* You must have at least PHP version 5.4 installed on your system.
+Create your `Source` and `Target` objects:
+
+```php
+$source = new LocalFilesSource(['dir' => $sourcePath]);
+$target = new LocalFilesTarget(['dir' => $targetPath]);
+```
+
+Create the `FilesSynchronizer` and assign the `Source` and the `Target`: 
+
+```php
+$synchronizer = new FilesSynchronizer($source, $target);
+$synchronizer->observe($observer); // optionally set an EventObserver object
+```
+
+Now start syncing your files:
+
+```php
+$synchronizer->synchronize();
+$synchronizer->synchronize(false); // Do not preserve obsolete files
+```
 
 
 Installation
@@ -46,9 +65,17 @@ Include the vendor autoloader and use the classes:
 namespace Acme\MyApplication;
 
 use FlameCore\Synchronizer\Files\FilesSynchronizer;
+use FlameCore\Synchronizer\Files\Source\LocalFilesSource;
+use FlameCore\Synchronizer\Files\Target\LocalFilesTarget;
 
 require 'vendor/autoload.php';
 ```
+
+
+Requirements
+------------
+
+* You must have at least PHP version 5.4 installed on your system.
 
 
 Contributors
