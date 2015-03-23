@@ -14,11 +14,11 @@
     ],
     "support": {
         "issues": "https://github.com/FlameCore/FilesSynchronizer/issues",
-        "source": "https://github.com/FlameCore/FilesSynchronizer"
+        "wiki": "https://github.com/FlameCore/FilesSynchronizer/wiki"
     },
     "require": {
         "php": ">=5.4",
-        "flamecore/synchronizer": "dev-master",
+        "flamecore/synchronizer": "~0.1",
         "symfony/filesystem": "~2.6",
         "league/flysystem": "~1.0"
     },
