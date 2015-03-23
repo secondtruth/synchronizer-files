@@ -25,12 +25,25 @@ namespace FlameCore\Synchronizer\Files\Tests;
 
 abstract class FilesSynchronizerTestCase extends \PHPUnit_Framework_TestCase
 {
-    private $umask;
-
     /**
-     * @var string $workspace
+     * @var string
      */
     protected $workspace = null;
+
+    /**
+     * @var string
+     */
+    protected $sourcePath;
+
+    /**
+     * @var string
+     */
+    protected $targetPath;
+
+    /**
+     * @var int
+     */
+    private $umask;
 
     public function setUp()
     {
@@ -38,12 +51,20 @@ abstract class FilesSynchronizerTestCase extends \PHPUnit_Framework_TestCase
         $this->workspace = rtrim(sys_get_temp_dir(), DIRECTORY_SEPARATOR).DIRECTORY_SEPARATOR.time().rand(0, 1000);
         mkdir($this->workspace, 0777, true);
         $this->workspace = realpath($this->workspace);
+
+        $this->fillWorkspace();
     }
 
     public function tearDown()
     {
         $this->clean($this->workspace);
         umask($this->umask);
+    }
+
+    public function fillWorkspace()
+    {
+        $this->sourcePath = $this->fillWorkspaceWithSource();
+        $this->targetPath = $this->fillWorkspaceWithTarget();
     }
 
     /**
@@ -95,6 +116,29 @@ abstract class FilesSynchronizerTestCase extends \PHPUnit_Framework_TestCase
         } else {
             unlink($file);
         }
+    }
+
+    protected function assertNewFileCreated()
+    {
+        $file = $this->targetPath.DIRECTORY_SEPARATOR.'new.txt';
+
+        $this->assertFileExists($file);
+        $this->assertEquals('CONTENT', file_get_contents($file));
+    }
+
+    protected function assertFileModified()
+    {
+        $file = $this->targetPath.DIRECTORY_SEPARATOR.'modified.txt';
+
+        $this->assertFileExists($file);
+        $this->assertEquals('MODIFIED CONTENT', file_get_contents($file));
+    }
+
+    protected function assertObsoleteFileDeleted()
+    {
+        $file = $this->targetPath.DIRECTORY_SEPARATOR.'obsolete.txt';
+
+        $this->assertFileNotExists($file);
     }
 
     /**

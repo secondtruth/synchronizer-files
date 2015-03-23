@@ -33,16 +33,6 @@ use FlameCore\Synchronizer\Files\Target\FlysystemFilesTarget;
 class FlysystemFilesSynchronizerTest extends FilesSynchronizerTestCase
 {
     /**
-     * @var string
-     */
-    private $sourcePath;
-
-    /**
-     * @var string
-     */
-    private $targetPath;
-
-    /**
      * @var \FlameCore\Synchronizer\Files\FilesSynchronizer
      */
     private $synchronizer;
@@ -50,9 +40,6 @@ class FlysystemFilesSynchronizerTest extends FilesSynchronizerTestCase
     public function setUp()
     {
         parent::setUp();
-
-        $this->sourcePath = $this->fillWorkspaceWithSource();
-        $this->targetPath = $this->fillWorkspaceWithTarget();
 
         $source = new FlysystemFilesSource(['dir' => $this->sourcePath]);
         $target = new FlysystemFilesTarget(['dir' => $this->targetPath]);
@@ -64,22 +51,14 @@ class FlysystemFilesSynchronizerTest extends FilesSynchronizerTestCase
     {
         $this->synchronizer->synchronize();
 
-        $file1 = $this->targetPath.DIRECTORY_SEPARATOR.'new.txt';
-        $file2 = $this->targetPath.DIRECTORY_SEPARATOR.'modified.txt';
-
-        $this->assertFileExists($file1);
-        $this->assertEquals('CONTENT', file_get_contents($file1));
-
-        $this->assertFileExists($file2);
-        $this->assertEquals('MODIFIED CONTENT', file_get_contents($file2));
+        $this->assertNewFileCreated();
+        $this->assertFileModified();
     }
 
     public function testSynchronizerPreserveDisabled()
     {
         $this->synchronizer->synchronize(false);
 
-        $file = $this->targetPath.DIRECTORY_SEPARATOR.'obsolete.txt';
-
-        $this->assertFileNotExists($file);
+        $this->assertObsoleteFileDeleted();
     }
 }
