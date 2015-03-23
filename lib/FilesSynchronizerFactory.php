@@ -33,13 +33,15 @@ use FlameCore\Synchronizer\SynchronizerFactoryInterface;
 class FilesSynchronizerFactory implements SynchronizerFactoryInterface
 {
     protected $sources = [
-        'local' => 'FlameCore\Synchronizer\Files\Source\LocalFilesSource'
+        'local' => 'FlameCore\Synchronizer\Files\Source\LocalFilesSource',
+        'ftp' => 'FlameCore\Synchronizer\Files\Source\FlysystemFilesSource'
     ];
-    
+
     protected $targets = [
-        'local' => 'FlameCore\Synchronizer\Files\Target\LocalFilesTarget'
+        'local' => 'FlameCore\Synchronizer\Files\Target\LocalFilesTarget',
+        'ftp' => 'FlameCore\Synchronizer\Files\Target\FlysystemFilesTarget'
     ];
-    
+
     /**
      * {@inheritdoc}
      */
@@ -56,14 +58,10 @@ class FilesSynchronizerFactory implements SynchronizerFactoryInterface
      */
     public function createSource(array $settings)
     {
-        if (isset($settings['type'])) {
-            $type = $this->normalize($settings['type']);
-            
-            if (!isset($this->sources[$type])) {
-                throw new \DomainException(sprintf('The source type "%s" does not exist.', $type));
-            }
-        } else {
-            $type = 'local';
+        $type = isset($settings['type']) ? $this->normalize($settings['type']) : 'local';
+
+        if (!isset($this->sources[$type])) {
+            throw new \DomainException(sprintf('The source type "%s" does not exist.', $type));
         }
 
         $class = $this->sources[$type];
@@ -76,14 +74,10 @@ class FilesSynchronizerFactory implements SynchronizerFactoryInterface
      */
     public function createTarget(array $settings)
     {
-        if (isset($settings['type'])) {
-            $type = $this->normalize($settings['type']);
-            
-            if (!isset($this->targets[$type])) {
-                throw new \DomainException(sprintf('The target type "%s" does not exist.', $type));
-            }
-        } else {
-            $type = 'local';
+        $type = isset($settings['type']) ? $this->normalize($settings['type']) : 'local';
+
+        if (!isset($this->targets[$type])) {
+            throw new \DomainException(sprintf('The target type "%s" does not exist.', $type));
         }
 
         $class = $this->targets[$type];
