@@ -46,14 +46,6 @@ class FilesSynchronizer extends AbstractSynchronizer
      */
     public function synchronize($preserve = true)
     {
-        if ($this->source === null) {
-            throw new \LogicException('Cannot synchronize without source.');
-        }
-
-        if ($this->target === null) {
-            throw new \LogicException('Cannot synchronize without target.');
-        }
-
         if ($this->observer) {
             $this->observer->notify('sync.start');
         }
