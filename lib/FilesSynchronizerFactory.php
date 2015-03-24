@@ -23,6 +23,7 @@
 
 namespace FlameCore\Synchronizer\Files;
 
+use FlameCore\Synchronizer\Files\Location\FilesLocationInterface;
 use FlameCore\Synchronizer\SynchronizerFactoryInterface;
 
 /**
@@ -32,15 +33,15 @@ use FlameCore\Synchronizer\SynchronizerFactoryInterface;
  */
 class FilesSynchronizerFactory implements SynchronizerFactoryInterface
 {
-    protected $sources = [
-        'local' => 'FlameCore\Synchronizer\Files\Source\LocalFilesSource',
-        'ftp' => 'FlameCore\Synchronizer\Files\Source\FlysystemFilesSource'
-    ];
+    /**
+     * @var array
+     */
+    protected $sources = array();
 
-    protected $targets = [
-        'local' => 'FlameCore\Synchronizer\Files\Target\LocalFilesTarget',
-        'ftp' => 'FlameCore\Synchronizer\Files\Target\FlysystemFilesTarget'
-    ];
+    /**
+     * @var array
+     */
+    protected $targets = array();
 
     /**
      * {@inheritdoc}
@@ -64,9 +65,10 @@ class FilesSynchronizerFactory implements SynchronizerFactoryInterface
             throw new \DomainException(sprintf('The source type "%s" does not exist.', $type));
         }
 
-        $class = $this->sources[$type];
+        $class = $this->sources[$type]['class'];
+        $initializer = $this->sources[$type]['initializer'];
 
-        return new $class($settings);
+        return $this->createObject($class, $initializer, $settings);
     }
 
     /**
@@ -80,15 +82,18 @@ class FilesSynchronizerFactory implements SynchronizerFactoryInterface
             throw new \DomainException(sprintf('The target type "%s" does not exist.', $type));
         }
 
-        $class = $this->targets[$type];
+        $class = $this->targets[$type]['class'];
+        $initializer = $this->targets[$type]['initializer'];
 
-        return new $class($settings);
+        return $this->createObject($class, $initializer, $settings);
     }
 
     /**
-     * {@inheritdoc}
+     * @param string $type
+     * @param string $class
+     * @param callable $initializer
      */
-    public function registerSource($type, $class)
+    public function registerSource($type, $class, callable $initializer = null)
     {
         $type = $this->normalize($type);
 
@@ -100,13 +105,18 @@ class FilesSynchronizerFactory implements SynchronizerFactoryInterface
             throw new \DomainException('The given class does not exist.');
         }
 
-        $this->sources[$type] = $class;
+        $this->sources[$type] = array(
+            'class'       => $class,
+            'initializer' => $initializer
+        );
     }
 
     /**
-     * {@inheritdoc}
+     * @param string $type
+     * @param string $class
+     * @param callable $initializer
      */
-    public function registerTarget($type, $class)
+    public function registerTarget($type, $class, callable $initializer = null)
     {
         $type = $this->normalize($type);
 
@@ -118,14 +128,18 @@ class FilesSynchronizerFactory implements SynchronizerFactoryInterface
             throw new \DomainException('The given class does not exist.');
         }
 
-        $this->targets[$type] = $class;
+        $this->targets[$type] = array(
+            'class'       => $class,
+            'initializer' => $initializer
+        );
     }
 
     /**
      * @param string $name
      * @return string
      */
-    protected function normalize($name) {
+    protected function normalize($name)
+    {
         $name = (string) $name;
 
         if ($name === '') {
@@ -133,5 +147,27 @@ class FilesSynchronizerFactory implements SynchronizerFactoryInterface
         }
 
         return $name;
+    }
+
+    /**
+     * @param string $class
+     * @param callable $initializer
+     * @param array $settings
+     * @return \FlameCore\Synchronizer\Files\Location\FilesLocationInterface
+     * @throws \UnexpectedValueException
+     */
+    protected function createObject($class, callable $initializer = null, array $settings = [])
+    {
+        if ($initializer) {
+            $object = $initializer($class, $settings);
+
+            if (!$object instanceof FilesLocationInterface) {
+                throw new \UnexpectedValueException(sprintf('The initializer for class %s does not return a valid object.', $class));
+            }
+
+            return $object;
+        } else {
+            return new $class($settings);
+        }
     }
 }

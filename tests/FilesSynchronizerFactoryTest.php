@@ -37,7 +37,11 @@ class FilesSynchronizerFactoryTest extends \PHPUnit_Framework_TestCase
 
     public function setUp()
     {
-        $this->factory = new FilesSynchronizerFactory();
+        $factory = new FilesSynchronizerFactory();
+        $factory->registerSource('local', 'FlameCore\Synchronizer\Files\Source\LocalFilesSource');
+        $factory->registerTarget('local', 'FlameCore\Synchronizer\Files\Target\LocalFilesTarget');
+
+        $this->factory = $factory;
     }
 
     public function testFactoryCreatesSynchronizer()
