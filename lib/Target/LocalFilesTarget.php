@@ -107,7 +107,7 @@ class LocalFilesTarget extends LocalFilesLocation implements FilesTargetInterfac
     public function createDir($name, $mode = 0777)
     {
         try {
-            $this->filesystem->mkdir($this->getRealPathName($name), $mode, true);
+            $this->filesystem->mkdir($this->getRealPathName($name), $mode);
 
             return true;
         } catch (\Exception $e) {

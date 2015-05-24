@@ -48,9 +48,9 @@ class FlysystemFilesLocation implements  FilesLocationInterface
      */
     public function __construct(array $settings, AdapterInterface $adapter = null)
     {
-		$adapter = $adapter ?: $this->createAdapter($settings);
-		
-		$filesystem = new Filesystem($adapter, $settings);
+        $adapter = $adapter ?: $this->createAdapter($settings);
+
+        $filesystem = new Filesystem($adapter, $settings);
         $filesystem->addPlugin(new ListFiles());
 
         $this->filesystem = $filesystem;

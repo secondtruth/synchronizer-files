@@ -153,7 +153,7 @@ class FilesSynchronizerFactory implements SynchronizerFactoryInterface
      * @param string $class
      * @param callable $initializer
      * @param array $settings
-     * @return \FlameCore\Synchronizer\Files\Location\FilesLocationInterface
+     * @return object
      * @throws \UnexpectedValueException
      */
     protected function createObject($class, callable $initializer = null, array $settings = [])
