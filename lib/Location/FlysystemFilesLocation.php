@@ -83,6 +83,30 @@ class FlysystemFilesLocation implements  FilesLocationInterface
     }
 
     /**
+     * {@inheritdoc}
+     */
+    public function getFileMode($file)
+    {
+        $visibility = $this->filesystem->getVisibility($file);
+
+        if ($visibility) {
+            return $visibility == AdapterInterface::VISIBILITY_PRIVATE ? 0700 : 0744;
+        } else {
+            return false;
+        }
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getFileHash($file)
+    {
+        $content = $this->filesystem->read($file);
+
+        return hash('crc32b', $content);
+    }
+
+    /**
      * @param array $settings
      * @return bool
      */

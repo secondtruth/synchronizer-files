@@ -23,7 +23,6 @@
 
 namespace FlameCore\Synchronizer\Files\Target;
 
-use FlameCore\Synchronizer\Files\Location\FilesLocationInterface;
 use FlameCore\Synchronizer\SynchronizerTargetInterface;
 
 /**
@@ -31,11 +30,11 @@ use FlameCore\Synchronizer\SynchronizerTargetInterface;
  *
  * @author   Christian Neff <christian.neff@gmail.com>
  */
-interface FilesTargetInterface extends SynchronizerTargetInterface, FilesLocationInterface
+interface FilesTargetInterface extends SynchronizerTargetInterface
 {
     /**
      * @param string $file
-     * @return string
+     * @return string|bool
      */
     public function get($file);
 
@@ -72,16 +71,4 @@ interface FilesTargetInterface extends SynchronizerTargetInterface, FilesLocatio
      * @return bool
      */
     public function removeDir($name);
-
-    /**
-     * @param string $file
-     * @return int
-     */
-    public function getFileMode($file);
-
-    /**
-     * @param string $file
-     * @return string
-     */
-    public function getFileHash($file);
 }

@@ -39,24 +39,4 @@ class LocalFilesSource extends LocalFilesLocation implements FilesSourceInterfac
     {
         return file_get_contents($this->getRealPathName($file));
     }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getFileMode($file)
-    {
-        $fileperms = fileperms($this->getRealPathName($file));
-
-        return substr(decoct($fileperms), 2);
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getFileHash($file)
-    {
-        $filename = $this->getRealPathName($file);
-
-        return is_readable($filename) ? hash_file('crc32b', $filename) : false;
-    }
 }

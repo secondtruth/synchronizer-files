@@ -46,4 +46,16 @@ interface FilesLocationInterface
      * @return string
      */
     public function getRealPathName($file);
+
+    /**
+     * @param string $file
+     * @return int
+     */
+    public function getFileMode($file);
+
+    /**
+     * @param string $file
+     * @return string|bool
+     */
+    public function getFileHash($file);
 }

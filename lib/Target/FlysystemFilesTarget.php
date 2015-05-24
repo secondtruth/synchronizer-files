@@ -94,24 +94,4 @@ class FlysystemFilesTarget extends FlysystemFilesLocation implements FilesTarget
     {
         return $this->filesystem->deleteDir($name);
     }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getFileMode($file)
-    {
-        $visibility = $this->filesystem->getVisibility($file);
-
-        return $visibility == AdapterInterface::VISIBILITY_PRIVATE ? 0700 : 0744;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getFileHash($file)
-    {
-        $content = $this->filesystem->read($file);
-
-        return hash('crc32b', $content);
-    }
 }

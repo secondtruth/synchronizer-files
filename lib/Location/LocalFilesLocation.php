@@ -103,6 +103,26 @@ class LocalFilesLocation implements FilesLocationInterface
     }
 
     /**
+     * {@inheritdoc}
+     */
+    public function getFileMode($file)
+    {
+        $fileperms = fileperms($this->getRealPathName($file));
+
+        return substr(decoct($fileperms), 2);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getFileHash($file)
+    {
+        $filename = $this->getRealPathName($file);
+
+        return is_readable($filename) ? hash_file('crc32b', $filename) : false;
+    }
+
+    /**
      * @param string $path
      * @return bool
      */
