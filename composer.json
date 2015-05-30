@@ -35,5 +35,8 @@
         "psr-4": {
             "FlameCore\\Synchronizer\\Files\\Tests\\": "tests/"
         }
+    },
+    "scripts": {
+        "test": "phpunit"
     }
 }
