@@ -21,6 +21,7 @@ install:
 script: phpunit --coverage-text --coverage-clover=coverage.clover
 
 after_script:
+  - php vendor/bin/ocular code-coverage:upload --format=php-clover coverage.clover
   - php vendor/bin/test-reporter --coverage-report=coverage.clover --stdout > codeclimate.json
   - "curl -X POST -d @codeclimate.json -H 'Content-Type: application/json' -H 'User-Agent: Code Climate (PHP Test Reporter v0.1.1)' https://codeclimate.com/test_reports"
 
