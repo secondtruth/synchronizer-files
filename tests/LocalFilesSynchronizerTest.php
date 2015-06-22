@@ -24,6 +24,7 @@
 namespace FlameCore\Synchronizer\Files\Tests;
 
 use FlameCore\Synchronizer\Files\FilesSynchronizer;
+use FlameCore\Synchronizer\Files\Location\LocalFilesLocation;
 use FlameCore\Synchronizer\Files\Source\LocalFilesSource;
 use FlameCore\Synchronizer\Files\Target\LocalFilesTarget;
 
@@ -60,5 +61,31 @@ class LocalFilesSynchronizerTest extends FilesSynchronizerTestCase
         $this->synchronizer->synchronize(false);
 
         $this->assertObsoleteFileDeleted();
+    }
+
+    /**
+     * @expectedException \InvalidArgumentException
+     */
+    public function testPathUndefinedException()
+    {
+        new LocalFilesLocation([]);
+    }
+
+    /**
+     * @expectedException \LogicException
+     * @expectedExceptionMessageRegExp |"/foo" does not exist|
+     */
+    public function testPathNotFoundException()
+    {
+        new LocalFilesLocation(['dir' => '/foo']);
+    }
+
+    /**
+     * @expectedException \LogicException
+     * @expectedExceptionMessageRegExp |absolute path for "./foo"|
+     */
+    public function testRelativePathNotFoundException()
+    {
+        new LocalFilesLocation(['dir' => './foo']);
     }
 }
