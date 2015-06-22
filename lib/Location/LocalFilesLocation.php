@@ -37,6 +37,8 @@ class LocalFilesLocation implements FilesLocationInterface
 
     /**
      * {@inheritdoc}
+     * @throws \InvalidArgumentException
+     * @throws \LogicException
      */
     public function __construct(array $settings)
     {
@@ -44,7 +46,21 @@ class LocalFilesLocation implements FilesLocationInterface
             throw new \InvalidArgumentException(sprintf('The %s does not define "dir" setting.', get_class($this)));
         }
 
-        $this->path = !$this->isAbsolutePath($settings['dir']) ? realpath(getcwd() . DIRECTORY_SEPARATOR . $settings['dir']) : $settings['dir'];
+        if ($this->isAbsolutePath($settings['dir'])) {
+            $path = $settings['dir'];
+
+            if (!is_dir($path)) {
+                throw new \LogicException(sprintf('The path "%s" does not exist.', $path));
+            }
+        } else {
+            $path = $this->toAbsolutePath($settings['dir']);
+
+            if (!$path) {
+                throw new \LogicException(sprintf('The absolute path for "%s" could not be determined.', $settings['dir']));
+            }
+        }
+
+        $this->path = $path;
     }
 
     /**
@@ -61,7 +77,6 @@ class LocalFilesLocation implements FilesLocationInterface
     public function getFilesList($exclude = false)
     {
         $fileslist = array();
-
         $iterator = new \RecursiveDirectoryIterator($this->path, \FilesystemIterator::SKIP_DOTS | \FilesystemIterator::UNIX_PATHS);
 
         if ((is_string($exclude) || is_array($exclude)) && !empty($exclude)) {
@@ -129,5 +144,14 @@ class LocalFilesLocation implements FilesLocationInterface
     protected function isAbsolutePath($path)
     {
         return $path[0] === DIRECTORY_SEPARATOR || preg_match('#^(?:/|\\\\|[A-Za-z]:\\\\|[A-Za-z]:/)#', $path);
+    }
+
+    /**
+     * @param string $path
+     * @return string|bool
+     */
+    protected function toAbsolutePath($path)
+    {
+        return realpath(getcwd() . DIRECTORY_SEPARATOR . $path);
     }
 }
