@@ -23,6 +23,7 @@
 
 namespace FlameCore\Synchronizer\Files\Source;
 
+use FlameCore\Synchronizer\Files\Location\FilesLocationInterface;
 use FlameCore\Synchronizer\SynchronizerSourceInterface;
 
 /**
@@ -30,7 +31,7 @@ use FlameCore\Synchronizer\SynchronizerSourceInterface;
  *
  * @author   Christian Neff <christian.neff@gmail.com>
  */
-interface FilesSourceInterface extends SynchronizerSourceInterface
+interface FilesSourceInterface extends FilesLocationInterface, SynchronizerSourceInterface
 {
     /**
      * @param string $file
