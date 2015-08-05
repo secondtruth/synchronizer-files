@@ -122,9 +122,9 @@ class LocalFilesLocation implements FilesLocationInterface
      */
     public function getFileMode($file)
     {
-        $fileperms = fileperms($this->getRealPathName($file));
+        $filename = $this->getRealPathName($file);
 
-        return substr(decoct($fileperms), 2);
+        return file_exists($filename) ? fileperms($filename) & 0777 : false;
     }
 
     /**
