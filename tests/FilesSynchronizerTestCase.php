@@ -48,7 +48,7 @@ abstract class FilesSynchronizerTestCase extends \PHPUnit_Framework_TestCase
     public function setUp()
     {
         $this->umask = umask(0);
-        $this->workspace = rtrim(sys_get_temp_dir(), DIRECTORY_SEPARATOR).DIRECTORY_SEPARATOR.time().rand(0, 1000);
+        $this->workspace = rtrim(sys_get_temp_dir(), DIRECTORY_SEPARATOR).DIRECTORY_SEPARATOR.time().mt_rand(0, 1000);
         mkdir($this->workspace, 0777, true);
         $this->workspace = realpath($this->workspace);
 
@@ -61,7 +61,43 @@ abstract class FilesSynchronizerTestCase extends \PHPUnit_Framework_TestCase
         umask($this->umask);
     }
 
-    public function fillWorkspace()
+    protected function assertNewFileCreated()
+    {
+        $file = $this->targetPath.DIRECTORY_SEPARATOR.'new.txt';
+
+        $this->assertFileExists($file);
+        $this->assertEquals('CONTENT', file_get_contents($file));
+    }
+
+    protected function assertFileModified()
+    {
+        $file = $this->targetPath.DIRECTORY_SEPARATOR.'modified.txt';
+
+        $this->assertFileExists($file);
+        $this->assertEquals('MODIFIED CONTENT', file_get_contents($file));
+    }
+
+    protected function assertObsoleteFileDeleted()
+    {
+        $file = $this->targetPath.DIRECTORY_SEPARATOR.'obsolete.txt';
+
+        $this->assertFileNotExists($file);
+    }
+
+    /**
+     * @param int    $expected expected file permissions as three digits (i.e. 755)
+     * @param string $filePath
+     */
+    protected function assertFilePermissions($expected, $filePath)
+    {
+        $actual = (int) substr(sprintf('%o', fileperms($filePath)), -3);
+        $this->assertEquals(
+            $expected, $actual,
+            sprintf('File permissions for %s must be %s. Actual %s', $filePath, $expected, $actual)
+        );
+    }
+
+    protected function fillWorkspace()
     {
         $this->sourcePath = $this->fillWorkspaceWithSource();
         $this->targetPath = $this->fillWorkspaceWithTarget();
@@ -116,42 +152,5 @@ abstract class FilesSynchronizerTestCase extends \PHPUnit_Framework_TestCase
         } else {
             unlink($file);
         }
-    }
-
-    protected function assertNewFileCreated()
-    {
-        $file = $this->targetPath.DIRECTORY_SEPARATOR.'new.txt';
-
-        $this->assertFileExists($file);
-        $this->assertEquals('CONTENT', file_get_contents($file));
-    }
-
-    protected function assertFileModified()
-    {
-        $file = $this->targetPath.DIRECTORY_SEPARATOR.'modified.txt';
-
-        $this->assertFileExists($file);
-        $this->assertEquals('MODIFIED CONTENT', file_get_contents($file));
-    }
-
-    protected function assertObsoleteFileDeleted()
-    {
-        $file = $this->targetPath.DIRECTORY_SEPARATOR.'obsolete.txt';
-
-        $this->assertFileNotExists($file);
-    }
-
-    /**
-     * @param int    $expectedFilePerms expected file permissions as three digits (i.e. 755)
-     * @param string $filePath
-     */
-    protected function assertFilePermissions($expectedFilePerms, $filePath)
-    {
-        $actualFilePerms = (int) substr(sprintf('%o', fileperms($filePath)), -3);
-        $this->assertEquals(
-            $expectedFilePerms,
-            $actualFilePerms,
-            sprintf('File permissions for %s must be %s. Actual %s', $filePath, $expectedFilePerms, $actualFilePerms)
-        );
     }
 }
