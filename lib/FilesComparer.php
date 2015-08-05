@@ -26,6 +26,16 @@ use FlameCore\Synchronizer\Files\Target\FilesTargetInterface;
 class FilesComparer
 {
     /**
+     * @var \FlameCore\Synchronizer\Files\Source\FilesSourceInterface
+     */
+    protected $source;
+
+    /**
+     * @var \FlameCore\Synchronizer\Files\Target\FilesTargetInterface
+     */
+    protected $target;
+
+    /**
      * @var array
      */
     protected $outdatedFiles = array();
@@ -57,39 +67,16 @@ class FilesComparer
      */
     public function __construct(FilesSourceInterface $source, FilesTargetInterface $target, $exclude = false)
     {
+        $this->source = $source;
+        $this->target = $target;
+
         $sourceFiles = $source->getFilesList($exclude);
         $targetFiles = $target->getFilesList();
 
         ksort($sourceFiles);
         ksort($targetFiles);
 
-        foreach ($sourceFiles as $dir => $files) {
-            if (!isset($targetFiles[$dir])) {
-                $this->missingDirs[] = $dir;
-            }
-
-            foreach ($files as $file => $pathname) {
-                if (isset($targetFiles[$dir][$file])) {
-                    if ($source->getFileHash($pathname) != $target->getFileHash($pathname)) {
-                        $this->outdatedFiles[] = $pathname;
-                    }
-                } else {
-                    $this->missingFiles[] = $pathname;
-                }
-            }
-        }
-
-        foreach ($targetFiles as $dir => $files) {
-            foreach ($files as $file => $pathname) {
-                if (!isset($sourceFiles[$dir][$file])) {
-                    $this->obsoleteFiles[] = $pathname;
-                }
-            }
-
-            if (!isset($sourceFiles[$dir])) {
-                $this->obsoleteDirs[] = $dir;
-            }
-        }
+        $this->scan($sourceFiles, $targetFiles);
     }
 
     /**
@@ -130,5 +117,49 @@ class FilesComparer
     public function getObsoleteFiles()
     {
         return $this->obsoleteFiles;
+    }
+
+    /**
+     * @param array $sourceFiles
+     * @param array $targetFiles
+     */
+    protected function scan(array $sourceFiles, array $targetFiles)
+    {
+        foreach ($sourceFiles as $dir => $files) {
+            if (!isset($targetFiles[$dir])) {
+                $this->missingDirs[] = $dir;
+            }
+
+            foreach ($files as $file => $pathname) {
+                if (isset($targetFiles[$dir][$file])) {
+                    if ($this->compare($pathname)) {
+                        $this->outdatedFiles[] = $pathname;
+                    }
+                } else {
+                    $this->missingFiles[] = $pathname;
+                }
+            }
+        }
+
+        foreach ($targetFiles as $dir => $files) {
+            foreach ($files as $file => $pathname) {
+                if (!isset($sourceFiles[$dir][$file])) {
+                    $this->obsoleteFiles[] = $pathname;
+                }
+            }
+
+            if (!isset($sourceFiles[$dir])) {
+                $this->obsoleteDirs[] = $dir;
+            }
+        }
+    }
+
+    /**
+     * @param string $file
+     * @return bool
+     */
+    protected function compare($file)
+    {
+        return $this->source->getFileHash($file) !== $this->target->getFileHash($file);
     }
 }
