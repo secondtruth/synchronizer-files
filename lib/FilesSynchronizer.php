@@ -96,7 +96,8 @@ class FilesSynchronizer extends AbstractSynchronizer
         }
 
         foreach ($files as $file) {
-            if (!$this->target->put($file, $this->source->get($file), 0777)) {
+            $content = $this->source->get($file);
+            if ($content === false || !$this->target->put($file, $content, 0777)) {
                 $this->fails++;
             }
 
@@ -129,7 +130,8 @@ class FilesSynchronizer extends AbstractSynchronizer
         }
 
         foreach ($files as $file) {
-            if (!$this->target->put($file, $this->source->get($file), 0777)) {
+            $content = $this->source->get($file);
+            if ($content === false || !$this->target->put($file, $content, 0777)) {
                 $this->fails++;
             }
 
