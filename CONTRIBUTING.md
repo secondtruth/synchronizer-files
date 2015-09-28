@@ -28,7 +28,7 @@ The Rules
 Coding Standard
 ---------------
 
-We use the [PSR-2 coding style][4] but without the line length limit.
+We use the [PSR-1 coding standard][4] and the [PSR-2 coding style][5].
 
 
 Running tests
@@ -44,4 +44,5 @@ You can run the unit tests with the following commands:
   [1]: https://github.com/FlameCore/FilesSynchronizer
   [2]: http://semver.org/
   [3]: http://www.git-scm.com/book/en/v2/Git-Tools-Rewriting-History#Changing-Multiple-Commit-Messages
-  [4]: http://www.php-fig.org/psr/psr-2/
+  [4]: http://www.php-fig.org/psr/psr-1/
+  [5]: http://www.php-fig.org/psr/psr-2/
