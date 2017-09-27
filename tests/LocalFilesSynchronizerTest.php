@@ -17,8 +17,6 @@ namespace FlameCore\Synchronizer\Files\Tests;
 
 use FlameCore\Synchronizer\Files\FilesSynchronizer;
 use FlameCore\Synchronizer\Files\Location\LocalFilesLocation;
-use FlameCore\Synchronizer\Files\Source\LocalFilesSource;
-use FlameCore\Synchronizer\Files\Target\LocalFilesTarget;
 
 /**
  * Test class for local FilesSynchronizer.
@@ -34,8 +32,8 @@ class LocalFilesSynchronizerTest extends FilesSynchronizerTestCase
     {
         parent::setUp();
 
-        $source = new LocalFilesSource(['dir' => $this->sourcePath]);
-        $target = new LocalFilesTarget(['dir' => $this->targetPath]);
+        $source = new LocalFilesLocation(['dir' => $this->sourcePath]);
+        $target = new LocalFilesLocation(['dir' => $this->targetPath]);
 
         $this->synchronizer = new FilesSynchronizer($source, $target);
     }

@@ -18,8 +18,8 @@ namespace FlameCore\Synchronizer\Files;
 use FlameCore\Synchronizer\AbstractSynchronizer;
 use FlameCore\Synchronizer\SynchronizerSourceInterface;
 use FlameCore\Synchronizer\SynchronizerTargetInterface;
-use FlameCore\Synchronizer\Files\Source\FilesSourceInterface;
-use FlameCore\Synchronizer\Files\Target\FilesTargetInterface;
+use FlameCore\Synchronizer\Files\Location\FilesSourceInterface;
+use FlameCore\Synchronizer\Files\Location\FilesTargetInterface;
 
 /**
  * The FilesSynchronizer class
@@ -29,12 +29,12 @@ use FlameCore\Synchronizer\Files\Target\FilesTargetInterface;
 class FilesSynchronizer extends AbstractSynchronizer
 {
     /**
-     * @var \FlameCore\Synchronizer\Files\Source\FilesSourceInterface
+     * @var \FlameCore\Synchronizer\Files\Location\FilesSourceInterface
      */
     protected $source;
 
     /**
-     * @var \FlameCore\Synchronizer\Files\Target\FilesTargetInterface
+     * @var \FlameCore\Synchronizer\Files\Location\FilesTargetInterface
      */
     protected $target;
 

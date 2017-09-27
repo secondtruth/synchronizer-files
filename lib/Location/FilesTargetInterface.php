@@ -13,9 +13,8 @@
  * @license  http://opensource.org/licenses/ISC ISC License
  */
 
-namespace FlameCore\Synchronizer\Files\Target;
+namespace FlameCore\Synchronizer\Files\Location;
 
-use FlameCore\Synchronizer\Files\Location\FilesLocationInterface;
 use FlameCore\Synchronizer\SynchronizerTargetInterface;
 
 /**
@@ -23,14 +22,8 @@ use FlameCore\Synchronizer\SynchronizerTargetInterface;
  *
  * @author   Christian Neff <christian.neff@gmail.com>
  */
-interface FilesTargetInterface extends FilesLocationInterface, SynchronizerTargetInterface
+interface FilesTargetInterface extends SynchronizerTargetInterface, FilesLocationInterface
 {
-    /**
-     * @param string $file
-     * @return string|bool
-     */
-    public function get($file);
-
     /**
      * @param string $file
      * @param string $content

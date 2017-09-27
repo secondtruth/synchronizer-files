@@ -13,22 +13,15 @@
  * @license  http://opensource.org/licenses/ISC ISC License
  */
 
-namespace FlameCore\Synchronizer\Files\Source;
+namespace FlameCore\Synchronizer\Files\Location;
 
-use FlameCore\Synchronizer\Files\Location\LocalFilesLocation;
+use FlameCore\Synchronizer\SynchronizerSourceInterface;
 
 /**
- * The LocalFilesSource class
+ * The FilesSource interface
  *
  * @author   Christian Neff <christian.neff@gmail.com>
  */
-class LocalFilesSource extends LocalFilesLocation implements FilesSourceInterface
+interface FilesSourceInterface extends SynchronizerSourceInterface, FilesLocationInterface
 {
-    /**
-     * {@inheritdoc}
-     */
-    public function get($file)
-    {
-        return file_get_contents($this->getRealPathName($file));
-    }
 }

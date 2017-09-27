@@ -15,8 +15,8 @@
 
 namespace FlameCore\Synchronizer\Files;
 
-use FlameCore\Synchronizer\Files\Source\FilesSourceInterface;
-use FlameCore\Synchronizer\Files\Target\FilesTargetInterface;
+use FlameCore\Synchronizer\Files\Location\FilesSourceInterface;
+use FlameCore\Synchronizer\Files\Location\FilesTargetInterface;
 
 /**
  * The FilesComparer class
@@ -26,12 +26,12 @@ use FlameCore\Synchronizer\Files\Target\FilesTargetInterface;
 class FilesComparer
 {
     /**
-     * @var \FlameCore\Synchronizer\Files\Source\FilesSourceInterface
+     * @var FilesSourceInterface
      */
     protected $source;
 
     /**
-     * @var \FlameCore\Synchronizer\Files\Target\FilesTargetInterface
+     * @var FilesTargetInterface
      */
     protected $target;
 
@@ -61,8 +61,8 @@ class FilesComparer
     protected $obsoleteFiles = array();
 
     /**
-     * @param \FlameCore\Synchronizer\Files\Source\FilesSourceInterface $source
-     * @param \FlameCore\Synchronizer\Files\Target\FilesTargetInterface $target
+     * @param FilesSourceInterface $source
+     * @param FilesTargetInterface $target
      * @param array|bool $exclude
      */
     public function __construct(FilesSourceInterface $source, FilesTargetInterface $target, $exclude = false)

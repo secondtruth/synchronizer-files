@@ -30,8 +30,8 @@ class FilesSynchronizerFactoryTest extends \PHPUnit_Framework_TestCase
     public function setUp()
     {
         $factory = new FilesSynchronizerFactory();
-        $factory->registerSource('local', 'FlameCore\Synchronizer\Files\Source\LocalFilesSource');
-        $factory->registerTarget('local', 'FlameCore\Synchronizer\Files\Target\LocalFilesTarget');
+        $factory->registerSource('local', 'FlameCore\Synchronizer\Files\Location\LocalFilesLocation');
+        $factory->registerTarget('local', 'FlameCore\Synchronizer\Files\Location\LocalFilesLocation');
 
         $this->factory = $factory;
     }
@@ -47,13 +47,13 @@ class FilesSynchronizerFactoryTest extends \PHPUnit_Framework_TestCase
     {
         $actual = $this->factory->createSource(['dir' => '.']);
 
-        $this->assertInstanceOf('FlameCore\Synchronizer\Files\Source\LocalFilesSource', $actual);
+        $this->assertInstanceOf('FlameCore\Synchronizer\Files\Location\LocalFilesLocation', $actual);
     }
 
     public function testFactoryCreatesTarget()
     {
         $actual = $this->factory->createTarget(['dir' => '.']);
 
-        $this->assertInstanceOf('FlameCore\Synchronizer\Files\Target\LocalFilesTarget', $actual);
+        $this->assertInstanceOf('FlameCore\Synchronizer\Files\Location\LocalFilesLocation', $actual);
     }
 }

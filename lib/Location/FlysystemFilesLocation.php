@@ -27,7 +27,7 @@ use League\Flysystem\Util;
  *
  * @author   Christian Neff <christian.neff@gmail.com>
  */
-class FlysystemFilesLocation implements FilesLocationInterface
+class FlysystemFilesLocation implements FilesSourceInterface, FilesTargetInterface
 {
     /**
      * @var \League\Flysystem\Filesystem
@@ -46,6 +46,68 @@ class FlysystemFilesLocation implements FilesLocationInterface
         $filesystem->addPlugin(new ListFiles());
 
         $this->filesystem = $filesystem;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function get($file)
+    {
+        return $this->filesystem->read($file);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function put($file, $content, $mode)
+    {
+        if ($this->filesystem->put($file, $content)) {
+            $this->chmod($file, $mode);
+
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function chmod($file, $mode)
+    {
+        $visibility = $mode & 0044 ? AdapterInterface::VISIBILITY_PUBLIC : AdapterInterface::VISIBILITY_PRIVATE;
+
+        return $this->filesystem->setVisibility($file, $visibility);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function remove($file)
+    {
+        return $this->filesystem->delete($file);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function createDir($name, $mode = 0777)
+    {
+        if ($this->filesystem->createDir($name)) {
+            $this->chmod($name, $mode);
+
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function removeDir($name)
+    {
+        return $this->filesystem->deleteDir($name);
     }
 
     /**
@@ -100,7 +162,7 @@ class FlysystemFilesLocation implements FilesLocationInterface
 
     /**
      * @param array $settings
-     * @return bool
+     * @return AdapterInterface
      */
     protected function createAdapter(array $settings)
     {

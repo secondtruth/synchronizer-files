@@ -23,9 +23,10 @@ namespace FlameCore\Synchronizer\Files\Location;
 interface FilesLocationInterface
 {
     /**
-     * @param array $settings
+     * @param string $file
+     * @return string|bool
      */
-    public function __construct(array $settings);
+    public function get($file);
 
     /**
      * @param array|bool $exclude

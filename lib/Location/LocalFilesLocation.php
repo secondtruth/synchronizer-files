@@ -15,12 +15,14 @@
 
 namespace FlameCore\Synchronizer\Files\Location;
 
+use Symfony\Component\Filesystem\Filesystem;
+
 /**
  * The LocalFilesLocation class
  *
  * @author   Christian Neff <christian.neff@gmail.com>
  */
-class LocalFilesLocation implements FilesLocationInterface
+class LocalFilesLocation implements FilesSourceInterface, FilesTargetInterface
 {
     /**
      * @var string
@@ -28,11 +30,17 @@ class LocalFilesLocation implements FilesLocationInterface
     protected $path;
 
     /**
+     * @var \Symfony\Component\Filesystem\Filesystem
+     */
+    protected $filesystem;
+
+    /**
      * {@inheritdoc}
+     * @param \Symfony\Component\Filesystem\Filesystem $filesystem
      * @throws \InvalidArgumentException
      * @throws \LogicException
      */
-    public function __construct(array $settings)
+    public function __construct(array $settings, Filesystem $filesystem = null)
     {
         if (!isset($settings['dir']) || !is_string($settings['dir'])) {
             throw new \InvalidArgumentException(sprintf('The %s does not define "dir" setting.', get_class($this)));
@@ -53,6 +61,7 @@ class LocalFilesLocation implements FilesLocationInterface
         }
 
         $this->path = $path;
+        $this->filesystem = $filesystem ?: new Filesystem();
     }
 
     /**
@@ -61,6 +70,86 @@ class LocalFilesLocation implements FilesLocationInterface
     public function getFilesPath()
     {
         return $this->path;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function get($file)
+    {
+        return file_get_contents($this->getRealPathName($file));
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function put($file, $content, $mode)
+    {
+        $filename = $this->getRealPathName($file);
+
+        try {
+            $this->filesystem->dumpFile($filename, $content, $mode);
+
+            return true;
+        } catch (\Exception $e) {
+            return false;
+        }
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function chmod($file, $mode)
+    {
+        try {
+            $this->filesystem->chmod($this->getRealPathName($file), $mode);
+
+            return true;
+        } catch (\Exception $e) {
+            return false;
+        }
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function remove($file)
+    {
+        try {
+            $this->filesystem->remove($this->getRealPathName($file));
+
+            return true;
+        } catch (\Exception $e) {
+            return false;
+        }
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function createDir($name, $mode = 0777)
+    {
+        try {
+            $this->filesystem->mkdir($this->getRealPathName($name), $mode);
+
+            return true;
+        } catch (\Exception $e) {
+            return false;
+        }
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function removeDir($name)
+    {
+        try {
+            $this->filesystem->remove($this->getRealPathName($name));
+
+            return true;
+        } catch (\Exception $e) {
+            return false;
+        }
     }
 
     /**

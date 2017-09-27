@@ -16,8 +16,7 @@
 namespace FlameCore\Synchronizer\Files\Tests;
 
 use FlameCore\Synchronizer\Files\FilesSynchronizer;
-use FlameCore\Synchronizer\Files\Source\FlysystemFilesSource;
-use FlameCore\Synchronizer\Files\Target\FlysystemFilesTarget;
+use FlameCore\Synchronizer\Files\Location\FlysystemFilesLocation;
 
 /**
  * Test class for Flysystem FilesSynchronizer.
@@ -33,8 +32,8 @@ class FlysystemFilesSynchronizerTest extends FilesSynchronizerTestCase
     {
         parent::setUp();
 
-        $source = new FlysystemFilesSource(['dir' => $this->sourcePath]);
-        $target = new FlysystemFilesTarget(['dir' => $this->targetPath]);
+        $source = new FlysystemFilesLocation(['dir' => $this->sourcePath]);
+        $target = new FlysystemFilesLocation(['dir' => $this->targetPath]);
 
         $this->synchronizer = new FilesSynchronizer($source, $target);
     }
