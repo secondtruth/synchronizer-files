@@ -1,10 +1,10 @@
 FlameCore FilesSynchronizer
 ===========================
 
-[![Build Status](https://img.shields.io/travis/FlameCore/FilesSynchronizer.svg)](https://travis-ci.org/FlameCore/FilesSynchronizer)
-[![Scrutinizer](http://img.shields.io/scrutinizer/g/FlameCore/FilesSynchronizer.svg)](https://scrutinizer-ci.com/g/FlameCore/FilesSynchronizer)
-[![Coverage](http://img.shields.io/codeclimate/coverage/github/FlameCore/FilesSynchronizer.svg)](https://codeclimate.com/github/FlameCore/FilesSynchronizer/coverage)
-[![License](http://img.shields.io/packagist/l/flamecore/synchronizer-files.svg)](https://packagist.org/packages/flamecore/synchronizer-files)
+[![Build Status](https://img.shields.io/travis/flamecore/synchronizer-files.svg)](https://travis-ci.org/flamecore/synchronizer-files)
+[![Scrutinizer](http://img.shields.io/scrutinizer/g/flamecore/synchronizer-files.svg)](https://scrutinizer-ci.com/g/flamecore/synchronizer-files)
+[![Coverage](http://img.shields.io/scrutinizer/coverage/g/flamecore/synchronizer-files.svg)](https://scrutinizer-ci.com/g/flamecore/synchronizer-files)
+[![License](http://img.shields.io/packagist/l/flamecore/synchronizer-files.svg)](http://www.flamecore.org/projects/synchronizer-files)
 
 This library makes it easy to synchronize local and remote filesystems.
 
@@ -64,9 +64,7 @@ Create a file called `composer.json` in your project directory and put the follo
 }
 ```
 
-[Install Composer](https://getcomposer.org/doc/00-intro.md#installation-linux-unix-osx) if you don't already have it present on your system:
-
-    $ curl -sS https://getcomposer.org/installer | php
+[Install Composer](https://getcomposer.org/doc/00-intro.md#installation-linux-unix-osx) if you don't already have it present on your system.
 
 Use Composer to [download the vendor libraries](https://getcomposer.org/doc/00-intro.md#using-composer) and generate the vendor/autoload.php file:
 
