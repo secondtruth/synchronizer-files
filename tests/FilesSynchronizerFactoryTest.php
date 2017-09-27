@@ -26,7 +26,7 @@ class FilesSynchronizerFactoryTest extends \PHPUnit_Framework_TestCase
     const TEST_LOCATION_CLASS = 'FlameCore\Synchronizer\Files\Location\LocalFilesLocation';
 
     /**
-     * @var \FlameCore\Synchronizer\Files\FilesSynchronizerFactory
+     * @var FilesSynchronizerFactory
      */
     private $factory;
 

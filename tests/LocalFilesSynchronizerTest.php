@@ -24,7 +24,7 @@ use FlameCore\Synchronizer\Files\Location\LocalFilesLocation;
 class LocalFilesSynchronizerTest extends FilesSynchronizerTestCase
 {
     /**
-     * @var \FlameCore\Synchronizer\Files\FilesSynchronizer
+     * @var FilesSynchronizer
      */
     private $synchronizer;
 
