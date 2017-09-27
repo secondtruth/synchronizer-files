@@ -22,6 +22,9 @@ use FlameCore\Synchronizer\Files\FilesSynchronizerFactory;
  */
 class FilesSynchronizerFactoryTest extends \PHPUnit_Framework_TestCase
 {
+    const TEST_SYNCHRONIZER_CLASS = 'FlameCore\Synchronizer\Files\FilesSynchronizer';
+    const TEST_LOCATION_CLASS = 'FlameCore\Synchronizer\Files\Location\LocalFilesLocation';
+
     /**
      * @var \FlameCore\Synchronizer\Files\FilesSynchronizerFactory
      */
@@ -30,8 +33,10 @@ class FilesSynchronizerFactoryTest extends \PHPUnit_Framework_TestCase
     public function setUp()
     {
         $factory = new FilesSynchronizerFactory();
-        $factory->registerSource('local', 'FlameCore\Synchronizer\Files\Location\LocalFilesLocation');
-        $factory->registerTarget('local', 'FlameCore\Synchronizer\Files\Location\LocalFilesLocation');
+        $factory->registerSource('local', self::TEST_LOCATION_CLASS);
+        $factory->registerTarget('local', self::TEST_LOCATION_CLASS);
+        $factory->registerSource('foo', self::TEST_LOCATION_CLASS);
+        $factory->registerTarget('foo', self::TEST_LOCATION_CLASS);
 
         $this->factory = $factory;
     }
@@ -40,20 +45,34 @@ class FilesSynchronizerFactoryTest extends \PHPUnit_Framework_TestCase
     {
         $actual = $this->factory->create(['dir' => '.'], ['dir' => '.']);
 
-        $this->assertInstanceOf('FlameCore\Synchronizer\Files\FilesSynchronizer', $actual);
+        $this->assertInstanceOf(self::TEST_SYNCHRONIZER_CLASS, $actual);
     }
 
-    public function testFactoryCreatesSource()
+    public function testFactoryCreatesDefaultSource()
     {
         $actual = $this->factory->createSource(['dir' => '.']);
 
-        $this->assertInstanceOf('FlameCore\Synchronizer\Files\Location\LocalFilesLocation', $actual);
+        $this->assertInstanceOf(self::TEST_LOCATION_CLASS, $actual);
     }
 
-    public function testFactoryCreatesTarget()
+    public function testFactoryCreatesDefaultTarget()
     {
         $actual = $this->factory->createTarget(['dir' => '.']);
 
-        $this->assertInstanceOf('FlameCore\Synchronizer\Files\Location\LocalFilesLocation', $actual);
+        $this->assertInstanceOf(self::TEST_LOCATION_CLASS, $actual);
+    }
+
+    public function testFactoryCreatesAlternativeSource()
+    {
+        $actual = $this->factory->createSource(['type' => 'foo', 'dir' => '.']);
+
+        $this->assertInstanceOf(self::TEST_LOCATION_CLASS, $actual);
+    }
+
+    public function testFactoryCreatesAlternativeTarget()
+    {
+        $actual = $this->factory->createTarget(['type' => 'foo', 'dir' => '.']);
+
+        $this->assertInstanceOf(self::TEST_LOCATION_CLASS, $actual);
     }
 }
