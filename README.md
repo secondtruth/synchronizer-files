@@ -8,8 +8,8 @@ FlameCore FilesSynchronizer
 
 This library makes it easy to synchronize local and remote filesystems.
 
-FilesSynchronizer was developed as backend for the deployment and testing tool [Seabreeze](https://github.com/FlameCore/Seabreeze).
-It is using our self-developed [Synchronizer](https://github.com/FlameCore/Synchronizer) library as foundation.
+FilesSynchronizer was developed as backend for the deployment and testing tool [Seabreeze](https://github.com/flamecore/seabreeze).
+It is using our self-developed [Synchronizer](https://github.com/flamecore/synchronizer) library as foundation.
 
 
 Getting Started
@@ -21,8 +21,7 @@ Include the vendor autoloader and use the classes:
 namespace Acme\MyApplication;
 
 use FlameCore\Synchronizer\Files\FilesSynchronizer;
-use FlameCore\Synchronizer\Files\Source\LocalFilesSource;
-use FlameCore\Synchronizer\Files\Target\LocalFilesTarget;
+use FlameCore\Synchronizer\Files\Location\LocalFilesLocation;
 
 require 'vendor/autoload.php';
 ```
@@ -30,8 +29,8 @@ require 'vendor/autoload.php';
 Create your `Source` and `Target` objects:
 
 ```php
-$source = new LocalFilesSource(['dir' => $sourcePath]);
-$target = new LocalFilesTarget(['dir' => $targetPath]);
+$source = new LocalFilesLocation(['dir' => $sourcePath]);
+$target = new LocalFilesLocation(['dir' => $targetPath]);
 ```
 
 Create the `FilesSynchronizer` and assign the `Source` and the `Target`: 
@@ -54,21 +53,11 @@ Installation
 
 ### Install via Composer
 
-Create a file called `composer.json` in your project directory and put the following into it:
-
-```
-{
-    "require": {
-        "flamecore/synchronizer-files": "dev-master"
-    }
-}
-```
-
 [Install Composer](https://getcomposer.org/doc/00-intro.md#installation-linux-unix-osx) if you don't already have it present on your system.
 
-Use Composer to [download the vendor libraries](https://getcomposer.org/doc/00-intro.md#using-composer) and generate the vendor/autoload.php file:
+To install the library, run the following command and you will get the latest development version:
 
-    $ php composer.phar install
+    $ php composer.phar require flamecore/synchronizer-files:dev-master
 
 
 Requirements
